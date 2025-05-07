@@ -1,0 +1,84 @@
+---
+title: "first R"
+author: "IBREEZ"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+\`\`\`{r setup, include=FALSE} knitr::opts_chunk\$set(echo = TRUE)
+
+install.packages("tidyverse") library(tidyverse)
+
+```{r}
+data()
+data("starwars")
+str(starwars)
+install.packages("dbplyr")
+library(dplyr)
+
+filter(starwars, species == "Droid")
+```
+
+```{r}
+select(starwars,name , ends_with("color"))
+```
+
+```{r}
+starwars %>%
+  mutate(bmi = mass / ((height/100)^2)) %>%
+  select(name:mass, bmi)
+```
+
+```{r}
+starwars %>%
+  arrange(desc(mass))
+```
+
+```{r}
+starwars %>%
+  group_by(species,gender)%>%
+  summarise(
+    n = n(),
+    mass = mean(mass,na.rm =TRUE)
+  )%>%
+  filter(
+    n>1,
+    mass>50
+  )
+```
+
+```{r}
+  summarise(
+    starwars,
+    avg=mean(mass,,na.rm =TRUE)#,na.rm =TRUE egnor the null value
+  )
+```
+
+```{r}
+starwars %>%
+  mutate(
+    mass =replace(mass , is.na(mass),0)#replace the null value with 0
+  )
+```
+
+```{r}
+starwars %>%
+  mutate(
+    hair_color = replace_na(hair_color, "unknown")
+  )
+```
+
+```{r}
+starwars %>%
+  replace_na(mass, mean(mass, na.rm = TRUE))
+  
+```
+
+```{r}
+colSums(is.na(starwars))
+```
+
+```         
+```
+
+\
