@@ -1,0 +1,97 @@
+---
+title: "MiddleEastFreelancers"
+author: "IBREEZ"
+date: "2025-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("tidyverse")
+install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+MEFreelancers <- read_csv("MiddleEastFreelancers.csv",show_col_types=FALSE)
+MEFreelancers
+```
+
+```{r}
+library(ggplot2)
+
+```
+
+```{r}
+str(MEFreelancers)
+
+
+
+```
+
+```{r}
+# Create scatter plot
+ggplot(MEFreelancers, aes(x = price_per_hour, y = user_score)) +
+  geom_point(color = "steelblue") +
+  labs(title = "User Score vs Price",
+       x = "Price",
+       y = "User Score") +
+  theme_minimal
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+df_MEfreelancer <- MEFreelancers %>%
+  select(-skills,-description)
+head(df_MEfreelancer)
+ 
+ 
+```
+
+```{r}
+df_MEfreelancer<-df_MEfreelancer%>%
+ filter(location!="Israel")
+df_MEfreelancer
+```
+
+```{r}
+#Toremove$signfromthevalues
+ df_MEfreelancer$price_per_hour<-as.numeric(gsub("\\$","",df_MEfreelancer$price_per_hour))
+ ##---------------------------------------
+df_MEfreelancer<-df_MEfreelancer%>%
+ mutate(price_per_hr_OR=0.38*price_per_hour)%>%
+ select(-price_per_hour)
+ head(df_MEfreelancer)
+```
+
+```{r}
+df_MEfreelancer %>%
+ count(location)
+```
+
+```{r}
+ df_MEfreelancer %>%
+   filter(recommended==1)%>%
+   count(location)
+```
+
+```{r}
+ df_MEfreelancer %>%
+ summarize(min_price= min(price_per_hr_OR),
+ max_price= max(price_per_hr_OR))
+```
+
+```{r}
+ df_MEfreelancer%>%
+   group_by(location)%>%
+   summarize(min_price=min(price_per_hr_OR),
+              max_price=max(price_per_hr_OR))
+```
