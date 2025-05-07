@@ -1,0 +1,109 @@
+---
+title: "webScribing"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-05-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("tidyverse")
+library("tidyverse")
+install.packages("dbplyr")
+library(dplyr)
+```
+
+```{r}
+OpenSooqDF <- read_csv("df.csv",show_col_types = FALSE)
+OpenSooqDF
+```
+
+```{r}
+str(OpenSooqDF)
+```
+
+```{r}
+head(OpenSooqDF)
+```
+
+```{r}
+OpenSooqDF %>%
+  select(city,size_in_m2,rental_price)
+```
+
+```{r}
+OpenSooqDF %>%
+  group_by(city) %>%
+  summarise(
+    avg_rent = mean(rental_price , na.rm = TRUE),
+    min_rent = min (rental_price , na.rm = TRUE),
+    max_rent = max (rental_price , na.rm = TRUE),
+    count = n()
+  )
+```
+
+```{r}
+muscatData <- OpenSooqDF %>%
+  filter(city == "Muscat",
+         num_of_rooms == "Two" ,
+         rental_price <200)
+muscatData
+```
+
+```{r echo=FALSE}
+OpenSooqDF %>%
+  mutate(price_per_m2 <-
+           rental_price/size_in_m2)
+```
+
+```{r}
+ggplot(OpenSooqDF , aes (x=rental_type  , y=rental_price , fill=city)) + geom_boxplot()+facet_wrap(~city ,scale="free")
+```
+
+```{r}
+# in Daily:low prices in most cities with alot of outliers
+# in monthly  :Muscat  and  alwsta shows higher prices
+# in weekly: Muscat  and dhofar stands out with higher prices.
+# in yearly : Muscat, Al Wusta, and Ash Sharqiyah show higher prices and many outliers.
+```
+
+```{r}
+
+install.packages("ggridges")
+```
+
+```{r}
+# Load libraries
+library(ggplot2)
+library(ggridges)
+library(dplyr)
+
+# Optional: Remove extreme rental prices for clarity
+OpenSooqDF_clean <- OpenSooqDF %>%
+  filter(rental_price < 1000)
+
+# Basic ridgeline plot
+ggplot(OpenSooqDF_clean, aes(x = rental_price, y = rental_type, fill = city)) +
+  geom_density_ridges(alpha = 0.6) +
+  facet_wrap(~ city, scales = "free_y") +
+  theme_ridges() +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(size = 10),
+    axis.title.y = element_blank()
+  ) +
+  xlab("Rental Price") +
+  ggtitle("Distribution of Rental Prices by Type and City")
+```
+
+```{}
+```
+
+```{}
+```
+
+```{}
+```
+
+## 
