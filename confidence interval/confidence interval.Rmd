@@ -1,0 +1,68 @@
+---
+title: "confidence interval"
+author: "IBREEZ"
+date: "2025-05-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+confidence <- 0.95
+std_dev <- 1
+sample_size <- 30
+sample_mean <- 3.2
+```
+
+```{r}
+z_value <- qnorm(0.95)
+z_value
+```
+
+```{r}
+margin_of_error <- z_value * (std_dev / sqrt(sample_size))
+margin_of_error
+```
+
+```{r}
+lower_bound <- sample_mean - margin_of_error
+upper_bound <- sample_mean + margin_of_error
+```
+
+```{r}
+cat(sprintf("95%% Confidence Interval: (%.3f, %.3f)\n", lower_bound, upper_bound))
+```
+
+```{r}
+install.packages("ggplot2")
+
+# Load required package
+library(ggplot2)
+
+
+
+# Create x values (range around the mean)
+x <- seq(sample_mean - 4 * std_dev, sample_mean + 4 * std_dev, length = 1000)
+
+# Sampling distribution (standard error)
+y <- dnorm(x, mean = sample_mean, sd = std_dev / sqrt(sample_size))
+
+# Data frame for plotting
+df <- data.frame(x = x, y = y)
+
+# Plot
+ggplot(df, aes(x, y)) +
+  geom_line(color = "blue", size = 1) +
+  geom_area(data = subset(df, x >= lower_bound & x <= upper_bound), aes(x, y), fill = "orange", alpha = 0.5) +
+  geom_vline(xintercept = sample_mean, color = "red", linetype = "dashed", size = 1) +
+  labs(title = "Confidence Interval for Ice Cream Consumption (Known Standard Deviation)",
+       x = "Ice Cream Scoops per Week",
+       y = "Probability Density") +
+  theme_minimal() +
+  annotate("text", x = sample_mean, y = max(y), label = sprintf("Sample Mean = %.1f scoops", sample_mean), vjust = -1, color = "red")
+
+```
+
+## 
